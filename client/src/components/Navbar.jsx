@@ -9,6 +9,8 @@ import { RxCross2 } from "react-icons/rx";
 import apiRequest from "../api/index";
 import { useNavigate } from "react-router-dom";
 
+let controller;
+
 const Container = styled.div`
   height: 60px;
   ${mobile({ height: "50px" })}
@@ -128,14 +130,15 @@ const Navbar = () => {
   const handleSuggestionClick = (id) => {
     Navigate(`/product/${id}`)
   }
-  const getProductsByTitle = async (title) => await apiRequest("GET", `products/search-by-title/${title}`)
 
   const handleChange = async (e) => {
-    // setSearchTerm(e.target.value)
     // const filteredSuggestions = DATA.filter(item =>
     //   item.name.toLowerCase().includes(e.target.value.toLowerCase())
     // );
-    const res = await getProductsByTitle(e.target.value)
+    
+    controller && controller.abort()
+    controller=new AbortController();
+    const res= await apiRequest("GET", `products/search-by-title/${e.target.value}`,undefined,undefined,controller.signal,false)
     if (res?.status == 200)
       setSuggestions(res.data);
   }

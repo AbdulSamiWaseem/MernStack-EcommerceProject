@@ -1,13 +1,17 @@
 import axios from "axios"
 import { store } from "../redux/store"
+import { toast } from 'react-toastify';
+import { Troubleshoot } from "@mui/icons-material";
 
-
-const errorHandler = (error) => {
-    console.log('error: ', JSON.stringify(error, null, 2))
-        // console.log(error.response?.data?.message || 'Something Went Wrong!', Toast.SHORT)
+const errorHandler = (error,show) => {
+    if(show){
+    console.log('error: ', error)
+    toast.error(error?.message || 'Something Went Wrong!')
+    }
+    
 }
 
-const apiRequest = async (method, endpoint, data,isMultipart) => {
+const apiRequest = async (method, endpoint, data,isMultipart,signal,showError=Troubleshoot) => {
     try {
         const headers = {
             'accept': 'application/json',
@@ -21,10 +25,11 @@ const apiRequest = async (method, endpoint, data,isMultipart) => {
             method,
             url: `${process.env.REACT_APP_BASE_URL}api/${endpoint}`,
             data,
-            headers
+            headers,
+            signal
         })
     } catch (error) {
-        errorHandler(error)
+        errorHandler(error,showError)
     }
 }
 

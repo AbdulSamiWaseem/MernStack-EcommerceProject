@@ -14,13 +14,14 @@ import {
 } from "react-router-dom";
 import Success from "./pages/Success";
 import { useSelector } from "react-redux";
-
-
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   const User = useSelector((state) => state.user.currentUser);
   // const User = false;
 
   return (
+    <>
     <Router>
       <Routes>
         <Route path="/" element={<Home />}>
@@ -41,6 +42,8 @@ const App = () => {
         </Route>
       </Routes>
     </Router>
+    <ToastContainer/>
+    </>
   );
 };
 
