@@ -42,8 +42,8 @@ router.post("/", verifyTokenAndAdmin, upload.single('img'), async (req, res) => 
 
 //UPDATE
 router.put("/:id", verifyTokenAndAdmin, upload.single('img'), async (req, res) => {
-  console.log('res.body',req.body)
-  console.log('res.body',req?.file?.path)
+  console.log('res.body', req.body)
+  console.log('res.body', req?.file?.path)
   try {
     const prev = await Product.findById(req.params.id)
     if (prev) {
@@ -59,8 +59,8 @@ router.put("/:id", verifyTokenAndAdmin, upload.single('img'), async (req, res) =
       );
 
       //delete prev image
-      if (req?.file?.path && prev.img){
-        fs.unlink(prev.img,(err) => console.log('deletion error',err))
+      if (req?.file?.path && prev.img) {
+        fs.unlink(prev.img, (err) => console.log('deletion error', err))
       }
 
       res.status(200).json(updatedProduct);
@@ -111,6 +111,19 @@ router.get("/", async (req, res) => {
       products = await Product.find();
     }
 
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//SEARCH BY TITLE PRODUCTS
+router.get("/search-by-title/:title", async (req, res) => {
+  try {
+    const regex = new RegExp(req.params.title,'i')
+    const products = await Product.find({
+      title: {$regex:regex},
+    }).select('_id title')
     res.status(200).json(products);
   } catch (err) {
     res.status(500).json(err);

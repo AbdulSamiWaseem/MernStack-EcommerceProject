@@ -6,6 +6,8 @@ import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
+import apiRequest from "../api/index";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   height: 60px;
@@ -106,58 +108,36 @@ const DATA = [
   }, {
     id: 4,
     name: 'gfuwrk'
-  }, {
-    id: 5,
-    name: 'fgrig'
-  }, {
-    id: 6,
-    name: 'ucdhfabc'
-  }, {
-    id: 7,
-    name: 'uefhwe'
-  }, {
-    id: 8,
-    name: 'ffk'
-  }, {
-    id: 9,
-    name: 'uifh'
-  }, {
-    id: 10,
-    name: 'gbfvbc'
-  }, {
-    id: 11,
-    name: 'abrfkc'
-  }, {
-    id: 12,
-    name: 'eopdbf'
-  }
+  },
 ]
 
 const Navbar = () => {
+  const Navigate=useNavigate();
   const products = useSelector(state => state.cart.products)
   const [active, setActive] = useState(false)
   const [suggestions, setSuggestions] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
   const quantity = products.length;
   const handleActive = () => {
     // console.log('active')
     setActive(true)
   }
   const handleBlur = () => {
-    setActive(false)
+    // setActive(false)
     // console.log("blurrr");
   }
-  const handleSuggestionClick = () => {
-
+  const handleSuggestionClick = (id) => {
+    Navigate(`/product/${id}`)
   }
+  const getProductsByTitle = async (title) => await apiRequest("GET", `products/search-by-title/${title}`)
 
-
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value)
-    const filteredSuggestions = DATA.filter(item =>
-      item.name.includes(e.target.value)
-    );
-    setSuggestions(filteredSuggestions);
+  const handleChange = async (e) => {
+    // setSearchTerm(e.target.value)
+    // const filteredSuggestions = DATA.filter(item =>
+    //   item.name.toLowerCase().includes(e.target.value.toLowerCase())
+    // );
+    const res = await getProductsByTitle(e.target.value)
+    if (res?.status == 200)
+      setSuggestions(res.data);
   }
 
   const removeHistory = (id) => {
@@ -168,13 +148,13 @@ const Navbar = () => {
     // console.log("suggestions", suggestions)
 
   }
-  useEffect(() => {
-    const filteredSuggestions = DATA.filter(item =>
-      item.name.includes(searchTerm)
-    );
-    setSuggestions(filteredSuggestions);
-    console.log('hello')
-  }, DATA)
+  // useEffect(() => {
+  //   const filteredSuggestions = DATA.filter(item =>
+  //     item.name.includes(searchTerm)
+  //   );
+  //   setSuggestions(filteredSuggestions);
+  //   console.log('hello')
+  // }, DATA)
 
   return (
     <Container>
@@ -185,13 +165,13 @@ const Navbar = () => {
           <SearchContainer onFocus={handleActive} onBlur={handleBlur}>
             <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "5px 2px" }}>
               <Input placeholder="Search" onChange={handleChange} />
-              <Search style={{ color: "gray", fontSize: 16,paddingRight:"5px" }} />
+              <Search style={{ color: "gray", fontSize: 16, paddingRight: "5px" }} />
             </div>
             {(active && suggestions.length > 0)
               ? <SearchHistory className="suggestions">
                 {suggestions.map((suggestion) => (
-                  <SearchList key={suggestion.id} onClick={() => handleSuggestionClick(suggestion.name)}>
-                    {suggestion.name}
+                  <SearchList key={suggestion._id} onClick={() => handleSuggestionClick(suggestion._id)}>
+                    {suggestion.title}
                     {/* <RxCross2 onClick={() => removeHistory(suggestion.id)} /> */}
                   </SearchList>
                 ))}
