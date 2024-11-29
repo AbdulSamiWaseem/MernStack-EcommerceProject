@@ -1,10 +1,11 @@
 import { Badge } from "@mui/material";
 import { Search, ShoppingCartOutlined } from "@mui/icons-material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RxCross2 } from "react-icons/rx";
 
 const Container = styled.div`
   height: 60px;
@@ -12,9 +13,9 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  padding: 10px 20px;
+  padding: 15px 20px;
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   ${mobile({ padding: "10px 0px" })}
 `;
@@ -22,7 +23,7 @@ const Wrapper = styled.div`
 const Left = styled.div`
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const Language = styled.span`
@@ -34,13 +35,19 @@ const Language = styled.span`
 const SearchContainer = styled.div`
   border: 0.5px solid lightgray;
   display: flex;
-  align-items: center;
+  align-items: start;
   margin-left: 25px;
+  display:flex;
+  flex-direction:column;
+  z-index:1;
   padding: 5px;
+  background-color:white;
+  width:100%
 `;
 
 const Input = styled.input`
   border: none;
+  outline:none;
   ${mobile({ width: "50px" })}
 `;
 
@@ -62,28 +69,133 @@ const Right = styled.div`
 `;
 
 const MenuItem = styled.div`
-  font-size: 14px;
+  font-size: 16px;
+  font-weight:600;
   cursor: pointer;
   margin-left: 25px;
   ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `;
+const SearchHistory = styled.ul`
+  list-style: none;
+  padding: 10px;
+  width:90%;
+`;
+const SearchList = styled.li`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+`;
+
+const DATA = [
+  {
+    id: 1,
+    name: 'abc'
+  }, {
+    id: 2,
+    name: 'fwrui'
+  }, {
+    id: 3,
+    name: 'vwrg'
+  }, {
+    id: 4,
+    name: 'gfuwrk'
+  }, {
+    id: 5,
+    name: 'fgrig'
+  }, {
+    id: 6,
+    name: 'ucdhfabc'
+  }, {
+    id: 7,
+    name: 'uefhwe'
+  }, {
+    id: 8,
+    name: 'ffk'
+  }, {
+    id: 9,
+    name: 'uifh'
+  }, {
+    id: 10,
+    name: 'gbfvbc'
+  }, {
+    id: 11,
+    name: 'abrfkc'
+  }, {
+    id: 12,
+    name: 'eopdbf'
+  }
+]
 
 const Navbar = () => {
   const products = useSelector(state => state.cart.products)
-  const quantity=products.length
+  const [active, setActive] = useState(false)
+  const [suggestions, setSuggestions] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const quantity = products.length;
+  const handleActive = () => {
+    setActive(true)
+  }
+  const handleBlur = () => {
+    setActive(false)
+  }
+  const handleSuggestionClick = () => {
+
+  }
+
   
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value)
+    const filteredSuggestions = DATA.filter(item =>
+      item.name.includes(e.target.value)
+    );
+    setSuggestions(filteredSuggestions);
+  }
+
+  const removeHistory = (id) => {
+    const index = DATA.findIndex(item => item.id == id)
+    DATA.splice(index, 1);
+    console.log("suggestions", suggestions)
+    console.log('data', DATA)
+    console.log("suggestions", suggestions)
+
+  }
+  useEffect(() => {
+    const filteredSuggestions = DATA.filter(item =>
+      item.name.includes(searchTerm)
+    );
+    setSuggestions(filteredSuggestions);
+    console.log('hello')
+  }, DATA)
+
   return (
     <Container>
       <Wrapper>
         <Left>
           <Language>EN</Language>
+
           <SearchContainer>
-            <Input placeholder="Search" />
-            <Search style={{ color: "gray", fontSize: 16 }} />
+            <div style={{display:"flex",justifyContent:"space-between",width:"90%",padding:"5px 10px"}}>
+              <Input placeholder="Search" onChange={handleChange} onFocus={handleActive} />
+              <Search style={{ color: "gray", fontSize: 16 }} />
+            </div>
+            {(active && suggestions.length > 0)
+              ? <SearchHistory className="suggestions">
+                {suggestions.map((suggestion) => (
+                  <SearchList key={suggestion.id} onClick={() => handleSuggestionClick(suggestion.name)}>
+                    {suggestion.name}
+                    <RxCross2 onClick={() => removeHistory(suggestion.id)} />
+                  </SearchList>
+                ))}
+              </SearchHistory>
+              : active
+                ? <SearchHistory style={{ color: "gray" }}>No item Found</SearchHistory>
+                : null
+            }
           </SearchContainer>
+
         </Left>
         <Center>
-          <Logo>LAMA.</Logo>
+          <Logo>DILKASH.</Logo>
         </Center>
         <Right>
           <Link to="/register">

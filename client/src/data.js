@@ -1,7 +1,7 @@
 export const sliderItems = [
     {
       id: 1,
-      img: require('./assets/men.jpg'),
+      img: "https://5.imimg.com/data5/SELLER/Default/2023/11/359002497/SH/TU/UI/132511052/kids-clothes.jpg",
       title: "SUMMER SALE",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
       bg: "f5fafd",
@@ -26,20 +26,20 @@ export const sliderItems = [
     {
       id: 1,
       img: "https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      title: "SHIRT STYLE!",
-      cat:"women"
+      title: "WOMENS COLLECTION!",
+      cat:"womens"
     },
     {
       id: 2,
-      img: "https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      title: "LOUNGEWEAR LOVE",
-      cat:"coat"
+      img: "https://i.pinimg.com/736x/aa/ba/89/aaba89359da41d4719a6d2700a95fec0.jpg",
+      title: "MENS WEAR",
+      cat:"mens"
     },
     {
       id: 3,
-      img: "https://images.pexels.com/photos/5480696/pexels-photo-5480696.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-      title: "LIGHT JACKETS",
-      cat:"jeans"
+      img: "https://ninobambino.in/cdn/shop/articles/Designer_1.jpg?v=1722415064",
+      title: "KIDS COLLECTION",
+      cat:"kids"
     },
   ];
 

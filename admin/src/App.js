@@ -33,7 +33,6 @@ const DashboardLayout = () => {
 function App() {
   // const admin = useState(JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user).currentUser.isAdmin);
   const { currentUser } = useSelector(state => state.user)
-  // console.log("admin :", currentUser)
   return (
     <>
       <BrowserRouter>
