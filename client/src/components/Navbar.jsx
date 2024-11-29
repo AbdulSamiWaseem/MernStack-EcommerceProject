@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 const Left = styled.div`
   flex: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 const Language = styled.span`
@@ -42,12 +42,14 @@ const SearchContainer = styled.div`
   z-index:1;
   padding: 5px;
   background-color:white;
-  width:100%
+  width:100%;
 `;
 
 const Input = styled.input`
   border: none;
   outline:none;
+  width:100%;
+
   ${mobile({ width: "50px" })}
 `;
 
@@ -84,6 +86,11 @@ const SearchList = styled.li`
   display:flex;
   align-items:center;
   justify-content:space-between;
+  padding:5px;
+  &:hover {
+    background-color: #f0f0f0; 
+    cursor: pointer;           
+  }
 `;
 
 const DATA = [
@@ -133,16 +140,18 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const quantity = products.length;
   const handleActive = () => {
+    // console.log('active')
     setActive(true)
   }
   const handleBlur = () => {
     setActive(false)
+    // console.log("blurrr");
   }
   const handleSuggestionClick = () => {
 
   }
 
-  
+
   const handleChange = (e) => {
     setSearchTerm(e.target.value)
     const filteredSuggestions = DATA.filter(item =>
@@ -154,9 +163,9 @@ const Navbar = () => {
   const removeHistory = (id) => {
     const index = DATA.findIndex(item => item.id == id)
     DATA.splice(index, 1);
-    console.log("suggestions", suggestions)
-    console.log('data', DATA)
-    console.log("suggestions", suggestions)
+    // console.log("suggestions", suggestions)
+    // console.log('data', DATA)
+    // console.log("suggestions", suggestions)
 
   }
   useEffect(() => {
@@ -171,19 +180,19 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-          <Language>EN</Language>
+          {/* <Language>EN</Language> */}
 
-          <SearchContainer>
-            <div style={{display:"flex",justifyContent:"space-between",width:"90%",padding:"5px 10px"}}>
-              <Input placeholder="Search" onChange={handleChange} onFocus={handleActive} />
-              <Search style={{ color: "gray", fontSize: 16 }} />
+          <SearchContainer onFocus={handleActive} onBlur={handleBlur}>
+            <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "5px 2px" }}>
+              <Input placeholder="Search" onChange={handleChange} />
+              <Search style={{ color: "gray", fontSize: 16,paddingRight:"5px" }} />
             </div>
             {(active && suggestions.length > 0)
               ? <SearchHistory className="suggestions">
                 {suggestions.map((suggestion) => (
                   <SearchList key={suggestion.id} onClick={() => handleSuggestionClick(suggestion.name)}>
                     {suggestion.name}
-                    <RxCross2 onClick={() => removeHistory(suggestion.id)} />
+                    {/* <RxCross2 onClick={() => removeHistory(suggestion.id)} /> */}
                   </SearchList>
                 ))}
               </SearchHistory>

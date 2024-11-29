@@ -1,10 +1,11 @@
 export const sliderItems = [
     {
       id: 1,
-      img: "https://5.imimg.com/data5/SELLER/Default/2023/11/359002497/SH/TU/UI/132511052/kids-clothes.jpg",
+      img: "https://www.freeiconspng.com/thumbs/kids-png/kids-png--26.png",
       title: "SUMMER SALE",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
       bg: "f5fafd",
+      category:"kids",
     },
     {
       id: 2,
@@ -12,13 +13,15 @@ export const sliderItems = [
       title: "AUTUMN COLLECTION",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
       bg: "fcf1ed",
+      category:"womens",
     },
     {
       id: 3,
-      img: "https://i.ibb.co/cXFnLLV/3.png",
+      img: "https://www.nicepng.com/png/detail/920-9201973_image-male-model-transparent-background.png",
       title: "LOUNGEWEAR LOVE",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-      bg: "fbf0f4",
+      bg: "f6f6f6",
+      category:"mens",
     },
   ];
 
