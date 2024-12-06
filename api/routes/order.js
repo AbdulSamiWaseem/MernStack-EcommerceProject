@@ -3,105 +3,93 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-} = require("./verifyToken");
+} = require("../middlewares/verifyToken");
+const expressAsyncHandler = require("express-async-handler");
+
 
 const router = require("express").Router();
 
 //CREATE
 
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", verifyToken, expressAsyncHandler(async (req, res) => {
   const newOrder = new Order(req.body);
 
-  try {
-    const savedOrder = await newOrder.save();
-    res.status(200).json(savedOrder);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+
+  const savedOrder = await newOrder.save();
+  res.status(200).json(savedOrder);
+
+}));
 
 //UPDATE
-router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
-  try {
-    const updatedOrder = await Order.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
-    res.status(200).json(updatedOrder);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.put("/:id", verifyTokenAndAdmin, expressAsyncHandler(async (req, res) => {
+
+  const updatedOrder = await Order.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: req.body,
+    },
+    { new: true }
+  );
+  res.status(200).json(updatedOrder);
+
+}));
 
 //DELETE
-router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
-  try {
-    await Order.findByIdAndDelete(req.params.id);
-    res.status(200).json("Order has been deleted...");
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.delete("/:id", verifyTokenAndAdmin, expressAsyncHandler(async (req, res) => {
+
+  await Order.findByIdAndDelete(req.params.id);
+  res.status(200).json("Order has been deleted...");
+
+}));
 
 //GET USER ORDERS
-router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
-  try {
-    const orders = await Order.find({ userId: req.params.userId });
-    res.status(200).json(orders);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get("/find/:userId", verifyTokenAndAuthorization, expressAsyncHandler(async (req, res) => {
+
+  const orders = await Order.find({ userId: req.params.userId });
+  res.status(200).json(orders);
+
+}));
 
 // //GET ALL
 
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
-  try {
-    const orders = await Order.find();
-    res.status(200).json(orders);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.get("/", verifyTokenAndAdmin, expressAsyncHandler(async (req, res) => {
+
+  const orders = await Order.find();
+  res.status(200).json(orders);
+
+}));
 
 // GET MONTHLY INCOME
 
-router.get("/income", verifyTokenAndAdmin, async (req, res) => {
+router.get("/income", verifyTokenAndAdmin, expressAsyncHandler(async (req, res) => {
   const productId = req.query.pid;
   const date = new Date();
   const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
   const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
+  const income = await Order.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: previousMonth },
+        ...(productId && {
+          products: { $elemMatch: { productId } },
+        }),
+      },
+    },
+    {
+      $project: {
+        month: { $month: "$createdAt" },
+        sales: "$amount",
+      },
+    },
+    {
+      $group: {
+        _id: "$month",
+        total: { $sum: "$sales" },
+      },
+    },
+  ]);
+  res.status(200).json(income);
 
-  try {
-    const income = await Order.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: previousMonth },
-          ...(productId && {
-            products: { $elemMatch: { productId } },
-          }),
-        },
-      },
-      {
-        $project: {
-          month: { $month: "$createdAt" },
-          sales: "$amount",
-        },
-      },
-      {
-        $group: {
-          _id: "$month",
-          total: { $sum: "$sales" },
-        },
-      },
-    ]);
-    res.status(200).json(income);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+}));
 
 module.exports = router;

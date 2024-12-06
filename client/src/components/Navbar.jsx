@@ -1,6 +1,6 @@
 import { Badge } from "@mui/material";
 import { Search, ShoppingCartOutlined } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
@@ -8,26 +8,27 @@ import { Link } from "react-router-dom";
 import { RxCross2 } from "react-icons/rx";
 import apiRequest from "../api/index";
 import { useNavigate } from "react-router-dom";
+import { TailSpin } from 'react-loader-spinner'
 
 let controller;
 
 const Container = styled.div`
-  height: 60px;
-  ${mobile({ height: "50px" })}
+  height: 72px;
+  ${mobile({ height: "62px" })}
 `;
 
 const Wrapper = styled.div`
   padding: 15px 20px;
   display: flex;
-  align-items: start;
+  align-items: center;
   justify-content: space-between;
   ${mobile({ padding: "10px 0px" })}
 `;
 
 const Left = styled.div`
   flex: 1;
-  display: flex;
-  align-items: center;
+  height:42px;
+  position:relative;
 `;
 
 const Language = styled.span`
@@ -39,20 +40,21 @@ const Language = styled.span`
 const SearchContainer = styled.div`
   border: 0.5px solid lightgray;
   display: flex;
-  align-items: start;
+  align-items: center;
   margin-left: 25px;
-  display:flex;
   flex-direction:column;
   z-index:1;
   padding: 5px;
   background-color:white;
   width:100%;
+  position:absolute;
 `;
 
 const Input = styled.input`
   border: none;
   outline:none;
   width:100%;
+  height:42px
 
   ${mobile({ width: "50px" })}
 `;
@@ -114,19 +116,15 @@ const DATA = [
 ]
 
 const Navbar = () => {
-  const Navigate=useNavigate();
+  const Navigate = useNavigate();
   const products = useSelector(state => state.cart.products)
   const [active, setActive] = useState(false)
   const [suggestions, setSuggestions] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [loader, setLoader] = useState(false)
+  const searchRef = useRef()
   const quantity = products.length;
-  const handleActive = () => {
-    // console.log('active')
-    setActive(true)
-  }
-  const handleBlur = () => {
-    // setActive(false)
-    // console.log("blurrr");
-  }
+
   const handleSuggestionClick = (id) => {
     Navigate(`/product/${id}`)
   }
@@ -135,29 +133,42 @@ const Navbar = () => {
     // const filteredSuggestions = DATA.filter(item =>
     //   item.name.toLowerCase().includes(e.target.value.toLowerCase())
     // );
-    
+    console.log("handle Change")
+    setSearchTerm(e.target.value)
+    setActive(true)
     controller && controller.abort()
-    controller=new AbortController();
-    const res= await apiRequest("GET", `products/search-by-title/${e.target.value}`,undefined,undefined,controller.signal,false)
+    controller = new AbortController();
+    setLoader(true);
+    const res = await apiRequest("GET", `products/search-by-title/${e.target.value}`, undefined, undefined, controller.signal, false)
     if (res?.status == 200)
       setSuggestions(res.data);
-  }
-
-  const removeHistory = (id) => {
-    const index = DATA.findIndex(item => item.id == id)
-    DATA.splice(index, 1);
-    // console.log("suggestions", suggestions)
-    // console.log('data', DATA)
-    // console.log("suggestions", suggestions)
+    setLoader(false)
 
   }
-  // useEffect(() => {
-  //   const filteredSuggestions = DATA.filter(item =>
-  //     item.name.includes(searchTerm)
-  //   );
-  //   setSuggestions(filteredSuggestions);
-  //   console.log('hello')
-  // }, DATA)
+
+  // const removeHistory = (id) => {
+  //   const index = DATA.findIndex(item => item.id == id)
+  //   DATA.splice(index, 1);
+  //   // console.log("suggestions", suggestions)
+  //   // console.log('data', DATA)
+  //   // console.log("suggestions", suggestions)
+
+  // }
+
+  const handleClickOutside = (event) => {
+    console.log('searchRef.current', searchRef.current)
+    console.log('event.target', event.target)
+    if (searchRef.current && !searchRef.current.contains(event.target)) {
+      setActive(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <Container>
@@ -165,23 +176,44 @@ const Navbar = () => {
         <Left>
           {/* <Language>EN</Language> */}
 
-          <SearchContainer onFocus={handleActive} onBlur={handleBlur}>
+          <SearchContainer ref={searchRef}>
             <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "5px 2px" }}>
               <Input placeholder="Search" onChange={handleChange} />
-              <Search style={{ color: "gray", fontSize: 16, paddingRight: "5px" }} />
+              {loader
+                ? <TailSpin
+                  visible={true}
+                  height="20"
+                  width="20"
+                  color="gray"
+                  ariaLabel="tail-spin-loading"
+                  radius="1"
+                  wrapperStyle={{ paddingRight: "10px" }}
+                  wrapperClass=""
+
+                />
+                : <Search style={{ color: "gray", fontSize: 20, paddingRight: "5px" }} />
+              }
+
+
             </div>
-            {(active && suggestions.length > 0)
-              ? <SearchHistory className="suggestions">
-                {suggestions.map((suggestion) => (
-                  <SearchList key={suggestion._id} onClick={() => handleSuggestionClick(suggestion._id)}>
-                    {suggestion.title}
-                    {/* <RxCross2 onClick={() => removeHistory(suggestion.id)} /> */}
-                  </SearchList>
-                ))}
-              </SearchHistory>
-              : active
-                ? <SearchHistory style={{ color: "gray" }}>No item Found</SearchHistory>
-                : null
+            {(searchTerm && active) &&
+              <>
+                {
+                  suggestions.length > 0
+                    ? <SearchHistory className="suggestions">
+                      {suggestions.map((suggestion) => (
+                        <SearchList key={suggestion._id} onClick={() => handleSuggestionClick(suggestion._id)}>
+                          {suggestion.title}
+                          {/* <RxCross2 onClick={() => removeHistory(suggestion.id)} /> */}
+                        </SearchList>
+                      ))}
+                    </SearchHistory>
+                    : !loader
+                      ? <SearchHistory style={{ color: "gray" }}>No item Found</SearchHistory>
+                      : null
+
+                }
+              </>
             }
           </SearchContainer>
 

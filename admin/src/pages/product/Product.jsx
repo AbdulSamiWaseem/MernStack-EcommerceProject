@@ -135,16 +135,16 @@ export default function Product() {
           </div>
           <div className="productInfoBottom">
             <div className="productInfoItem">
-              <span className="productInfoKey">productId:</span>
+              <span className="productInfoKey">ProductId: </span>
               <span className="productInfoValue">{product._id}</span>
             </div>
             <div className="productInfoItem">
-              <span className="productInfoKey">sales:</span>
+              <span className="productInfoKey">Sales : </span>
               <span className="productInfoValue">5123</span>
             </div>
             <div className="productInfoItem">
-              <span className="productInfoKey">in stock:</span>
-              <span className="productInfoValue">{product.inStock}</span>
+              <span className="productInfoKey">In Stock : </span>
+              <span className="productInfoValue">{`${product.inStock}`}</span>
             </div>
           </div>
         </div>

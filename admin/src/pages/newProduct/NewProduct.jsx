@@ -1,13 +1,5 @@
 import { useState } from "react";
 import "./newProduct.css";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-// import app from "../../firebase";
-// import { addProduct } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../api2/apiCalls";
 import {
@@ -41,6 +33,8 @@ export default function NewProduct() {
     formData.append('desc', inputs.desc)
     formData.append('price', inputs.price)
     formData.append('inStock', inputs.inStock)
+    formData.append('color[]', 'black')
+
     cat.forEach(item => {
       formData.append('categories[]', item)
     })
@@ -52,7 +46,6 @@ export default function NewProduct() {
   const createProduct = async (product) => {
     dispatch(addProductStart());
     try {
-      // const res = await userRequest.post(`/products`, product);
       const res = await addProduct(product);
       if (res?.status == 200)
         dispatch(addProductSuccess(res.data));
@@ -67,9 +60,7 @@ export default function NewProduct() {
     })
     setCat([])
     setFile(null)
-    // console.log(inputs)
-    // console.log(cat)
-    // console.log(file)
+    
   };
 
   return (
@@ -116,7 +107,7 @@ export default function NewProduct() {
         </div>
         <div className="addProductItem">
           <label>Categories</label>
-          <input type="text" placeholder="jeans,skirts" onChange={handleCat} />
+          <input type="text" placeholder="mens, womens and kids" onChange={handleCat} />
         </div>
         <div className="addProductItem">
           <label>Stock</label>

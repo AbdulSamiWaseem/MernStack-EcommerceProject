@@ -1,8 +1,8 @@
-.productList{
+.productList {
     flex: 4;
 }
 
-.productListItem{
+.productListItem {
     display: flex;
     align-items: center;
 }
@@ -13,24 +13,31 @@
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
-  }
+}
 
-.productListEdit{
+.productListEdit {
     border: none;
     border-radius: 10px;
     padding: 5px 10px;
     background-color: #3bb077;
     color: white;
-    cursor: pointer;
     margin-right: 20px;
-}
-
-.productListDelete{
-    color: red;
-    cursor: pointer;
-}
-.edit{
+    height: 42px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+.productListDelete {
+    color: red;
+    cursor: pointer;
+}
+
+.edit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px;
+    box-sizing: border-box;
 }

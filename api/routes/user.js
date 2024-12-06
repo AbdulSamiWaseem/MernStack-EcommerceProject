@@ -3,7 +3,9 @@ const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-} = require("./verifyToken");
+} = require("../middlewares/verifyToken");
+const expressAsyncHandler = require("express-async-handler");
+
 
 const router = require("express").Router();
 
@@ -13,7 +15,7 @@ const router = require("express").Router();
 // })
 
 //UPDATE
-router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.put("/:id", verifyTokenAndAuthorization, expressAsyncHandler(async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
       req.body.password,
@@ -21,7 +23,6 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
     ).toString();
   }
 
-  try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
@@ -30,52 +31,41 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
       { new: true }
     );
     res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+  
+}));
 
 //DELETE
-router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  try {
+router.delete("/:id", verifyTokenAndAuthorization, expressAsyncHandler(async (req, res) => {
+ 
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json("User has been deleted...");
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+ 
+}));
 
 //GET USER
-router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
-  try {
+router.get("/find/:id", verifyTokenAndAdmin, expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
     const { password, ...others } = user._doc;
     res.status(200).json(others);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+ 
+}));
 
 //GET ALL USER
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/", verifyTokenAndAdmin, expressAsyncHandler(async (req, res) => {
   const query = req.query.new;
-  try {
     const users = query
       ? await User.find().sort({ _id: -1 }).limit(5)
       : await User.find();
     res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+  
+}));
 
 //GET USER STATS
 
-router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
+router.get("/stats", verifyTokenAndAdmin, expressAsyncHandler(async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
 
-  try {
     const data = await User.aggregate([
       { $match: { createdAt: { $gte: lastYear } } },
       {
@@ -91,10 +81,8 @@ router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
       },
     ]);
     res.status(200).json(data)
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+  
+}));
 
 
 
