@@ -36,6 +36,8 @@ router.post("/register", expressAsyncHandler(async (req, res) => {
 //LOGIN
 
 router.post("/login", expressAsyncHandler(async (req, res) => {
+  res.status(200).json("Success");
+
   const user = await User.findOne({ username: req.body.username });
   !user && res.status(401).json("Wrong credentials!");
 
