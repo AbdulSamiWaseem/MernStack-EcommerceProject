@@ -7,9 +7,9 @@ import Newsletter from "../components/Newsletter";
 import { mobile } from "../responsive";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { publicRequest } from "../requestMethods";
 import { addProduct } from "../redux/cartRedux";
 import { useDispatch, useSelector } from "react-redux";
+import apiRequest from "../api";
 
 const Container = styled.div``;
 
@@ -130,7 +130,7 @@ align-items:end;
 `;
 
 const Product = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [color, setColor] = useState("");
@@ -141,20 +141,14 @@ const Product = () => {
 
   useEffect(() => {
     const getProduct = async () => {
-      const res = await publicRequest.get("/products/find/" + id);
+      const res = await apiRequest("GET", "products/find/" + id,undefined);
+      if(res?.status == 200){
       setProduct(res.data);
       setColor(res.data.color[0])
+      }
     };
     getProduct();
   }, [id]);
-  // useEffect(() => {
-  //   const selectedProduct=products.find((p)=>p._id===product._id && p.color==color && p.size==size )
-  //   if(selectedProduct){
-  //     setIsAdded(true);
-  //   }
-  //   else
-  //   setIsAdded(false)
-  // }, [color,size,product]);
 
   const handleQuantity = (type) => {
     if (type === "dec") {
@@ -165,10 +159,10 @@ const Product = () => {
   };
 
   const handleClick = () => {
-      if (!size) {
-        setError(true)
-        return
-      }
+    if (!size) {
+      setError(true)
+      return
+    }
     dispatch(
       addProduct({ ...product, quantity, color, size })
     );

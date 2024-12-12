@@ -1,9 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { login } from "../redux/apiCalls";
 import { mobile } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"
+import { loginFailure, loginStart, loginSuccess } from "../redux/userRedux";
+import apiRequest from "../api";
 
 const Container = styled.div`
   width: 100vw;
@@ -75,7 +76,17 @@ const Login = (props) => {
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
+  const login = async (dispatch, user) => {
+    dispatch(loginStart());
+    try {
+      const res = await apiRequest("POST", "auth/login", user)
+      if (res?.status == 200) {
+        dispatch(loginSuccess(res.data));
+      }
+    } catch (err) {
+      dispatch(loginFailure());
+    }
+  };
   const handleClick = (e) => {
     e.preventDefault();
     login(dispatch, { username, password });

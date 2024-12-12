@@ -10,14 +10,14 @@
 }
 
 .productAddButton {
-  width: 80px;
   border: none;
-  padding: 5px;
+  padding: 5px 20px;
   background-color: teal;
   color: white;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  
 }
 
 .productTop {
@@ -88,14 +88,16 @@
 
 .productFormLeft > label {
   margin-bottom: 1rem;
-  color: gray;
+  color:black;
 }
 
 .productFormLeft > input {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   border: none;
   padding: 5px;
   border-bottom: 1px solid gray;
+  outline: none;
+  color: rgb(121, 117, 117);
 }
 
 .productFormLeft >select{
@@ -130,4 +132,8 @@
   color:white;
   font-weight: 600;
   cursor: pointer;
+}
+.formErrors{
+  color: red;
+
 }

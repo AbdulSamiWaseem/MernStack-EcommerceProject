@@ -43,7 +43,7 @@ const SearchContainer = styled.div`
   align-items: center;
   margin-left: 25px;
   flex-direction:column;
-  z-index:1;
+  z-index:2;
   padding: 5px;
   background-color:white;
   width:100%;
@@ -133,8 +133,11 @@ const Navbar = () => {
     // const filteredSuggestions = DATA.filter(item =>
     //   item.name.toLowerCase().includes(e.target.value.toLowerCase())
     // );
-    console.log("handle Change")
     setSearchTerm(e.target.value)
+    if(!e.target.value){
+      setSuggestions([])
+      return
+    }
     setActive(true)
     controller && controller.abort()
     controller = new AbortController();
@@ -178,7 +181,7 @@ const Navbar = () => {
 
           <SearchContainer ref={searchRef}>
             <div style={{ display: "flex", justifyContent: "space-between", width: "100%", padding: "5px 2px" }}>
-              <Input placeholder="Search" onChange={handleChange} />
+              <Input placeholder="Search" onChange={handleChange} onFocus={()=>{setActive(true)}} />
               {loader
                 ? <TailSpin
                   visible={true}
@@ -204,7 +207,6 @@ const Navbar = () => {
                       {suggestions.map((suggestion) => (
                         <SearchList key={suggestion._id} onClick={() => handleSuggestionClick(suggestion._id)}>
                           {suggestion.title}
-                          {/* <RxCross2 onClick={() => removeHistory(suggestion.id)} /> */}
                         </SearchList>
                       ))}
                     </SearchHistory>

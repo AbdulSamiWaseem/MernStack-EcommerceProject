@@ -1,13 +1,14 @@
 import axios from "axios"
 import { store } from "../redux/store"
+import { toast } from "react-toastify"
 
 
 const errorHandler = (error) => {
     console.log('error: ', JSON.stringify(error, null, 2))
-        // console.log(error.response?.data?.message || 'Something Went Wrong!', Toast.SHORT)
+    toast.error(error?.message || 'Something Went Wrong!')
 }
 
-const apiRequest = async (method, endpoint, data,isMultipart) => {
+const apiRequest = async (method, endpoint, data, isMultipart) => {
     try {
         const headers = {
             'accept': 'application/json',
@@ -16,7 +17,6 @@ const apiRequest = async (method, endpoint, data,isMultipart) => {
         const token = store.getState()?.user?.currentUser?.accessToken
         if (token)
             headers.token = `Bearer ${token}`
-        // console.log('headersssss', headers)
         return await axios({
             method,
             url: `${process.env.REACT_APP_BASE_URL}api/${endpoint}`,
