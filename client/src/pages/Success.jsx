@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
-import { userRequest } from "../requestMethods";
+import apiRequest from "../api";
 
 const Success = () => {
   const location = useLocation();
@@ -13,8 +13,7 @@ const Success = () => {
 
   useEffect(() => {
     const createOrder = async () => {
-      try {
-        const res = await userRequest.post("/orders", {
+        const res= await apiRequest("POST","/orders",{
           userId: currentUser._id,
           products: cart.products.map((item) => ({
             productId: item._id,
@@ -22,9 +21,12 @@ const Success = () => {
           })),
           amount: cart.total,
           address: data.billing_details.address,
-        });
-        setOrderId(res.data._id);
-      } catch {}
+        })
+        console.log("res",res)
+        if(res?.status==200){
+          setOrderId(res.data._id);
+        }
+
     };
     data && createOrder();
   }, [cart, data, currentUser]);

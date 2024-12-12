@@ -44,7 +44,7 @@ const Pay = () => {
         billingAddress
         shippingAddress
         token={onToken}
-        stripeKey='pk_test_51QARXz2Kl7FdsKaPvHL27wrbLnO0oATRB5gca27q72ixrV56bksm9NCeyxEFHHXa0bguQyrl9TbbToA2m8if7JrY00H5yNeonr'
+        stripeKey={process.env.REACT_APP_STRIPE}
       >
         <button style={{
           border: "none",

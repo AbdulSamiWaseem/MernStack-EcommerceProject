@@ -159,8 +159,8 @@ const Navbar = () => {
   // }
 
   const handleClickOutside = (event) => {
-    console.log('searchRef.current', searchRef.current)
-    console.log('event.target', event.target)
+    // console.log('searchRef.current', searchRef.current)
+    // console.log('event.target', event.target)
     if (searchRef.current && !searchRef.current.contains(event.target)) {
       setActive(false);
     }

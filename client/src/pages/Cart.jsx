@@ -7,13 +7,12 @@ import Navbar from "../components/Navbar";
 import { mobile } from "../responsive";
 import StripeCheckout from "react-stripe-checkout";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { userRequest } from "../requestMethods";
-import { useHistory } from "react-router";
 import { useNavigate } from "react-router-dom"
 import { addProduct, deleteProduct, incProduct, decProduct } from "../redux/cartRedux";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import apiRequest from "../api";
 const KEY = process.env.REACT_APP_STRIPE;
 
 
@@ -164,7 +163,7 @@ const Button = styled.button`
   color: white;
   font-weight: 600;
 `;
-const Empty=styled.h1`
+const Empty = styled.h1`
 position:absolute;
 top:50%;
 right:50%;
@@ -179,8 +178,8 @@ const Cart = () => {
   const [stripeToken, setStripeToken] = useState(null);
   const dispatch = useDispatch();
   const Navigation = useNavigate();
-  const shippingCharges=10;
-  const shippingDiscount=5;
+  const shippingCharges = 10;
+  const shippingDiscount = 5;
 
   const onToken = (token) => {
     setStripeToken(token);
@@ -191,19 +190,20 @@ const Cart = () => {
 
 
     const makeRequest = async () => {
-      try {
-        const res = await userRequest.post("/checkout/payment", {
-          tokenId: stripeToken.id,
-          amount: 500,
-        });
 
+      const res = await apiRequest("POST", "/checkout/payment", {
+        tokenId: stripeToken.id,
+        amount: 500,
+      });
+      if (res?.status == 200) {
         Navigation("/success", {
           state: {
             stripeData: res.data,
             products: cart
           }
         })
-      } catch { }
+      }
+
     };
     stripeToken && makeRequest();
   }, [stripeToken]);
@@ -224,7 +224,7 @@ const Cart = () => {
       total = total + cart.products[i].price * cart.products[i].quantity;
     }
     return total;
-  },[cart])
+  }, [cart])
 
   return (
     <Container>
@@ -293,14 +293,14 @@ const Cart = () => {
             </SummaryItem>
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ {showTotal+shippingCharges-shippingDiscount}</SummaryItemPrice>
+              <SummaryItemPrice>$ {showTotal + shippingCharges - shippingDiscount}</SummaryItemPrice>
             </SummaryItem>
             <StripeCheckout
               name="Shop Online"
               image="https://avatars.githubusercontent.com/u/1486366?v=4"
               billingAddress
               shippingAddress
-              description={`Your total is $${showTotal+shippingCharges-shippingDiscount}}`}
+              description={`Your total is $${showTotal + shippingCharges - shippingDiscount}}`}
               amount={cart.total * 100}
               token={onToken}
               stripeKey={KEY}

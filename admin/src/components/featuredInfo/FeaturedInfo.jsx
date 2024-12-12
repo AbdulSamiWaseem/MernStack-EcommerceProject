@@ -2,7 +2,6 @@ import "./featuredInfo.css";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useEffect, useState } from "react";
-// import { userRequest } from "../../requestMethods";
 import { getIncome } from "../../api2/apiCalls";
 
 export default function FeaturedInfo() {
