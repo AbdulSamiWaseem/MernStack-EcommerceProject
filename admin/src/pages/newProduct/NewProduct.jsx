@@ -159,7 +159,7 @@ export default function NewProduct() {
       </div>
       <Link to="/products">
         <button className="productAddButton">
-          Back to Products List
+          Products List
         </button>
       </Link>
     </div>

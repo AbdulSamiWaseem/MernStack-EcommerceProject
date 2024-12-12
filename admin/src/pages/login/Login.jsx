@@ -41,7 +41,7 @@ const Login = () => {
     <div style={{
       display: "flex",
       flexDirection: "row",
-      height: "100%",
+      height: "100vh",
       width: "100%"
 
     }}>
@@ -51,23 +51,24 @@ const Login = () => {
       </div>
       <div
         style={{
-          height: "100vh",
+          height:"100%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           flex: 1,
+          padding:"0 10px",
           background: "linear-gradient(to bottom, rgba(4,9,3,1) 0%, rgba(32,44,44,1) 35%, rgba(143,103,54,1) 100%)",
         }}
       >
         <input
-          style={{ padding: 10, marginBottom: 20 }}
+          style={{ padding: "0.5rem", marginBottom: "1rem" }}
           type="text"
           placeholder="username"
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
-          style={{ padding: 10, marginBottom: 20 }}
+          style={{ padding: "0.5rem", marginBottom: "1rem" }}
           type="password"
           placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
