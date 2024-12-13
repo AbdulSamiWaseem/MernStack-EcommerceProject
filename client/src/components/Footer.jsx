@@ -1,5 +1,6 @@
 import {
   Facebook,
+  Height,
   Instagram,
   MailOutline,
   Phone,
@@ -9,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { width } from "@mui/system";
 
 const Container = styled.div`
   display: flex;
@@ -22,10 +24,15 @@ const Left = styled.div`
   padding: 20px;
 `;
 
-const Logo = styled.h1``;
+const Logo = styled.h1`
+  ${mobile({ fontSize:"22px" })}
+
+`;
 
 const Desc = styled.p`
   margin: 20px 0px;
+  ${mobile({  margin:"10px 0px",fontSize:"14px" })}
+
 `;
 
 const SocialContainer = styled.div`
@@ -42,6 +49,8 @@ const SocialIcon = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 20px;
+  ${mobile({height:"30px",width:"30px"})}
+
 `;
 
 const Center = styled.div`
@@ -78,6 +87,8 @@ const ContactItem = styled.div`
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+  ${mobile({ fontSize:"14px" })}
+
 `;
 
 const Payment = styled.img`

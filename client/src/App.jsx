@@ -22,27 +22,29 @@ const App = () => {
 
   return (
     <>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />}>
-        </Route>
-        <Route path="/products/:category" element={<ProductList />}>
-        </Route>
-        <Route path="/product/:id" element={<Product />}>
-        </Route>
-        <Route path="/cart" element={<Cart />}>
-        </Route>
-        <Route path="/success" element={<Success />}>
-        </Route>
-        <Route path="/pay" element={<Pay />}>
-        </Route>
-        <Route path="/login"  element={User ? <Navigate to={'/'} replace /> : <Login/>}>
-        </Route>
-        <Route path="/register"  element={User ? <Navigate to={'/'} replace /> : <Register/>}>
-        </Route>
-      </Routes>
-    </Router>
-    <ToastContainer/>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />}>
+          </Route>
+          <Route path="/*" element={<Home />}>
+          </Route>
+          <Route path="/products/:category" element={<ProductList />}>
+          </Route>
+          <Route path="/product/:id" element={<Product />}>
+          </Route>
+          <Route path="/cart" element={<Cart />}>
+          </Route>
+          <Route path="/success" element={<Success />}>
+          </Route>
+          <Route path="/pay" element={<Pay />}>
+          </Route>
+          <Route path="/login" element={User ? <Navigate to={'/'} replace /> : <Login />}>
+          </Route>
+          <Route path="/register" element={<Register />} />
+        </Routes>
+        <ToastContainer />
+      </Router>
+
     </>
   );
 };

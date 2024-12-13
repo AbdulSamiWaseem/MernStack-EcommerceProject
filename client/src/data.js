@@ -4,7 +4,7 @@ export const sliderItems = [
       img: "https://www.freeiconspng.com/thumbs/kids-png/kids-png--26.png",
       title: "SUMMER SALE",
       desc: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
-      bg: "f5fafd",
+      bg: "ffdbbb",
       category:"kids",
     },
     {

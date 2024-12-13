@@ -4,7 +4,7 @@ import Announcement from "../components/Announcement";
 import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
-import { mobile } from "../responsive";
+import { mobile,tablet } from "../responsive";
 import { useLocation } from "react-router";
 import { useState } from "react";
 
@@ -21,7 +21,8 @@ const FilterContainer = styled.div`
 
 const Filter = styled.div`
   margin: 20px;
-  ${mobile({ width: "0px 20px", display: "flex", flexDirection: "column" })}
+  ${tablet({ width: "0px 20px", display: "flex",flexDirection:"row"})}
+  ${mobile({  flexDirection: "column" })}
 `;
 
 const FilterText = styled.span`

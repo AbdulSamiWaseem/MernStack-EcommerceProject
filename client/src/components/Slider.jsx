@@ -2,7 +2,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import styled from "styled-components";
 import { sliderItems } from "../data";
-import { mobile } from "../responsive";
+import { mobile,tablet } from "../responsive";
 import { Link } from "react-router-dom";
 
 const Container = styled.div`
@@ -11,7 +11,7 @@ const Container = styled.div`
   display: flex;
   position: relative;
   overflow: hidden;
-  ${mobile({ display: "none" })}
+  ${mobile({display:"none"})}
 `;
 
 const Arrow = styled.div`
@@ -64,6 +64,7 @@ const InfoContainer = styled.div`
 
 const Title = styled.h1`
   font-size: 70px;
+  ${tablet({fontSize:"50px"})}
 `;
 
 const Desc = styled.p`
@@ -71,6 +72,8 @@ const Desc = styled.p`
   font-size: 20px;
   font-weight: 500;
   letter-spacing: 3px;
+  ${tablet({fontSize:"16px"})}
+
 `;
 
 const Button = styled.button`
@@ -78,6 +81,8 @@ const Button = styled.button`
   font-size: 20px;
   background-color: transparent;
   cursor: pointer;
+  ${tablet({fontSize:"16px"})}
+
 `;
 
 const Slider = () => {

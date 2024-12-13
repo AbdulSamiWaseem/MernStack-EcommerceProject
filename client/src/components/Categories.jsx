@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import { categories } from "../data";
-import { mobile } from "../responsive";
+import { mobile,tablet } from "../responsive";
 import CategoryItem from "./CategoryItem";
 
 const Container = styled.div`
   display: flex;
   padding: 20px;
   justify-content: space-between;
-  ${mobile({ padding: "0px", flexDirection:"column" })}
+  height:100%;
+  ${tablet({ padding: "0px"})}
+  ${mobile({flexDirection:"column"})}
 
 `;
 

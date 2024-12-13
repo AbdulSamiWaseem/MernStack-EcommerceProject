@@ -1,11 +1,14 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { mobile } from "../responsive";
+import { mobile, tablet } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"
 import { loginFailure, loginStart, loginSuccess } from "../redux/userRedux";
 import apiRequest from "../api";
-
+import { toast } from "react-toastify";
+import { useFormik } from 'formik';
+import { loginUserSchema } from "../schema";
+import { capitalizeFirstLetter } from "../utils";
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
@@ -18,19 +21,31 @@ const Container = styled.div`
   background-size: cover;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding:0 100px;
+  ${tablet({ flexDirection: "column", padding: "5px", justifyContent: "center" })}
+  
+
 `;
 
 const Wrapper = styled.div`
-  width: 25%;
+  width: 40%;
   padding: 20px;
   background-color: white;
+  height:300px;
+  margin-top:10px;
   ${mobile({ width: "75%" })}
 `;
 
 const Title = styled.h1`
   font-size: 24px;
   font-weight: 300;
+`;
+const Logo = styled.h1`
+  font-size: 5rem;
+  ${tablet({ fontSize: "4rem" })}
+  ${mobile({ fontSize: "2.5rem" })}
+
 `;
 
 const Form = styled.form`
@@ -51,11 +66,16 @@ const Button = styled.button`
   padding: 15px 20px;
   background-color: teal;
   color: white;
+  background-color: darkgreen; 
   cursor: pointer;
-  margin-bottom: 10px;
+  margin: 10px 0;
+  border-radius:5px;
+
   &:disabled {
-    color: green;
     cursor: not-allowed;
+  }
+  &:hover {
+    background-color: green; 
   }
 `;
 
@@ -68,57 +88,82 @@ const Link = styled.a`
 
 const Error = styled.span`
   color: red;
+  font-size:12px;
 `;
 
-const Login = (props) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
+  const [fetching, setFetchind] = useState(isFetching)
+  const [err, setErr] = useState(error)
   const navigate = useNavigate();
-  const login = async (dispatch, user) => {
+  const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik({
+    initialValues: {
+      username: '',
+      password: ''
+    },
+    validationSchema: loginUserSchema,
+    onSubmit: (values, actions) => {
+      login(values);
+      actions.resetForm()
+    }
+
+  })
+
+
+  const login = async (user) => {
     dispatch(loginStart());
     try {
       const res = await apiRequest("POST", "auth/login", user)
       if (res?.status == 200) {
         dispatch(loginSuccess(res.data));
+        toast.success("Login Successfully")
       }
     } catch (err) {
       dispatch(loginFailure());
+      toast.error("Login Failed")
+
     }
-  };
-  const handleClick = (e) => {
-    e.preventDefault();
-    login(dispatch, { username, password });
   };
   return (
     <>
-      {props.user
-        ? navigate("/")
-        : <Container>
-          <Wrapper>
-            <Title>SIGN IN</Title>
-            <Form>
-              <Input
-                placeholder="username"
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <Input
-                placeholder="password"
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Button onClick={handleClick} disabled={isFetching}>
-                LOGIN
-              </Button>
-              {error && <Error>Something went wrong...</Error>}
-              <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-              <Link>CREATE A NEW ACCOUNT</Link>
-            </Form>
-          </Wrapper>
-        </Container>
-
-      }
+      <Container>
+        <Logo>DILKASH.</Logo>
+        <Wrapper>
+          <Title>SIGN IN</Title>
+          <Form onSubmit={handleSubmit}>
+            <Input
+              placeholder="username"
+              name="username"
+              value={values.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.username && touched.username
+              ? <Error className="formErrors">{capitalizeFirstLetter(errors.username)}</Error>
+              : null
+            }
+            <Input
+              placeholder="password"
+              type="password"
+              name="password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.password && touched.password
+              ? <Error className="formErrors">{capitalizeFirstLetter(errors.password)}</Error>
+              : null
+            }
+            <Button type="submit" disabled={fetching}>
+              LOGIN
+            </Button>
+            {err && <Error>Something went wrong...</Error>}
+            {/* <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link> */}
+            <Link to='/register'>CREATE A NEW ACCOUNT</Link>
+          </Form>
+        </Wrapper>
+      </Container>
     </>
 
   );

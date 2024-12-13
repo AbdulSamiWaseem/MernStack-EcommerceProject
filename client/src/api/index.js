@@ -6,7 +6,7 @@ import { Troubleshoot } from "@mui/icons-material";
 const errorHandler = (error,show) => {
     if(show){
     console.log('error: ', error)
-    toast.error(error?.message || 'Something Went Wrong!')
+    toast.error(error?.response?.data?.message || error?.message || 'Something Went Wrong!')
     }
     
 }

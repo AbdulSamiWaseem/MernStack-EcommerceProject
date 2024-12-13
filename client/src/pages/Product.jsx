@@ -4,7 +4,7 @@ import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
-import { mobile } from "../responsive";
+import { mobile,tablet } from "../responsive";
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { addProduct } from "../redux/cartRedux";
@@ -25,9 +25,7 @@ const ImgContainer = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  height: 90vh;
   object-fit: cover;
-  ${mobile({ height: "40vh" })}
 `;
 
 const InfoContainer = styled.div`
@@ -88,7 +86,7 @@ const AddContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  ${mobile({ width: "100%" })}
+  ${tablet({ width: "100%" })}
 `;
 
 const AmountContainer = styled.div`
@@ -110,14 +108,17 @@ const Amount = styled.span`
 
 const Button = styled.button`
   padding: 15px;
-  border: 2px solid teal;
-  background-color: white;
+  border: 2px solid white;
+  background-color: teal;
   cursor: pointer;
+  color:white;
   font-weight: 500;
-
   &:hover {
     background-color: #f8f4f4;
+    border:2px solid teal;
+    color:black;
   }
+
 `;
 const Size = styled.div`
 color:red;

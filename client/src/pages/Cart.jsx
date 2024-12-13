@@ -4,11 +4,11 @@ import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import { mobile } from "../responsive";
+import { mobile, tablet } from "../responsive";
 import StripeCheckout from "react-stripe-checkout";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom"
-import { addProduct, deleteProduct, incProduct, decProduct } from "../redux/cartRedux";
+import { deleteProduct, incProduct, decProduct } from "../redux/cartRedux";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
@@ -26,6 +26,8 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   font-weight: 300;
   text-align: center;
+  ${mobile({ fontSize: "24px" })}
+
 `;
 
 const Top = styled.div`
@@ -33,6 +35,8 @@ const Top = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 20px;
+  ${mobile({ padding: "20px 0" })}
+  
 `;
 
 const TopButton = styled.button`
@@ -43,6 +47,11 @@ const TopButton = styled.button`
   background-color: ${(props) =>
     props.type === "filled" ? "black" : "transparent"};
   color: ${(props) => props.type === "filled" && "white"};
+  ${mobile({ fontSize: "14px" })}
+  &:hover {
+    background-color: black; 
+    color: white;
+  }
 `;
 
 const TopTexts = styled.div`
@@ -57,7 +66,7 @@ const TopText = styled.span`
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
-  ${mobile({ flexDirection: "column" })}
+  ${tablet({ flexDirection: "column", justifyContent: "center", alignItems: "center" })}
 `;
 
 const Info = styled.div`
@@ -68,7 +77,7 @@ const Product = styled.div`
   display: flex;
   justify-content: space-between;
   align-items:center;
-  ${mobile({ flexDirection: "column" })}
+  margin:10px 0;
 `;
 
 const ProductDetail = styled.div`
@@ -78,6 +87,9 @@ const ProductDetail = styled.div`
 
 const Image = styled.img`
   width: 200px;
+  height:200px;
+  object-fit:cover;
+  ${mobile({ width: "100px", height: "75px" })}
 `;
 
 const Details = styled.div`
@@ -85,20 +97,31 @@ const Details = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  ${mobile({ padding: "0 10px" })}
+
 `;
 
-const ProductName = styled.span``;
+const ProductName = styled.span`
+  ${mobile({ fontSize: "14px" })}
 
-const ProductId = styled.span``;
+`;
+
+const ProductId = styled.span`
+  ${mobile({ fontSize: "12px" })}
+`;
 
 const ProductColor = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 50%;
   background-color: ${(props) => props.color};
+  ${mobile({ height: "15px", width: "15px" })}
+
 `;
 
-const ProductSize = styled.span``;
+const ProductSize = styled.span`
+  ${mobile({ fontSize: "14px" })}
+`;
 
 const PriceDetail = styled.div`
   flex: 1;
@@ -112,18 +135,23 @@ const ProductAmountContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  ${mobile({ marginBottom: "0px" })}
+  
 `;
 
 const ProductAmount = styled.div`
   font-size: 24px;
   margin: 5px;
-  ${mobile({ margin: "5px 15px" })}
+  ${mobile({ fontSize: "16px", margin: "0px" })}
+
+
 `;
 
 const ProductPrice = styled.div`
   font-size: 30px;
   font-weight: 200;
-  ${mobile({ marginBottom: "20px" })}
+  ${mobile({ fontSize: "16px" })}
+
 `;
 
 const Hr = styled.hr`
@@ -138,10 +166,14 @@ const Summary = styled.div`
   border-radius: 10px;
   padding: 20px;
   height: 50vh;
+  ${mobile({ padding: "10px",width:"100%",marginTop:"10px" })}
+
 `;
 
 const SummaryTitle = styled.h1`
   font-weight: 200;
+  ${mobile({ fontSize: "24px" })}
+
 `;
 
 const SummaryItem = styled.div`
@@ -162,6 +194,11 @@ const Button = styled.button`
   background-color: black;
   color: white;
   font-weight: 600;
+  margin-top:10px;
+  &:hover {
+    background-color:white;
+    color: black; 
+  }
 `;
 const Empty = styled.h1`
 position:absolute;
@@ -170,7 +207,20 @@ right:50%;
 display:flex;
 align-items:center;
 font-weight:300;
+${tablet({ display:'none'})}
 
+
+`;
+const DetailsWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+const DeleteIcon = styled.div`
+font-size:2rem;
+margin-right:2rem;
+color:red;
+${mobile({ fontSize: "1.25rem", marginRight: "0px", })}
 `;
 
 const Cart = () => {
@@ -191,7 +241,7 @@ const Cart = () => {
 
     const makeRequest = async () => {
 
-      const res = await apiRequest("POST", "/checkout/payment", {
+      const res = await apiRequest("POST", "checkout/payment", {
         tokenId: stripeToken.id,
         amount: 500,
       });
@@ -238,7 +288,7 @@ const Cart = () => {
             <TopText>Shopping Bag(2)</TopText>
             <TopText>Your Wishlist (0)</TopText>
           </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          {/* <TopButton type="filled">CHECKOUT NOW</TopButton> */}
         </Top>
         <Bottom>
           {cart.products.length == 0
@@ -249,30 +299,35 @@ const Cart = () => {
               <Product key={`${index}`}>
                 <ProductDetail>
                   <Image src={`${process.env.REACT_APP_BASE_URL}${product.img}`} />
-                  <Details>
-                    <ProductName>
-                      <b>Product:</b> {product.title}
-                    </ProductName>
-                    <ProductId>
-                      <b>ID:</b> {product._id}
-                    </ProductId>
-                    <ProductColor color={product.color} />
-                    <ProductSize>
-                      <b>Size:</b> {product.size}
-                    </ProductSize>
-                  </Details>
+                  <DetailsWrapper>
+                    <Details>
+                      <ProductName>
+                        <b>Product:</b> {product.title}
+                      </ProductName>
+                      <ProductId>
+                        <b>ID:</b> {product._id}
+                      </ProductId>
+                      <ProductColor color={product.color} />
+                      <ProductSize>
+                        <b>Size:</b> {product.size}
+                      </ProductSize>
+                    </Details>
+                    <PriceDetail>
+                      <ProductAmountContainer>
+                        <Add onClick={() => handleAdd(product)} />
+                        <ProductAmount>{product.quantity}</ProductAmount>
+                        <Remove onClick={() => handleMinus(product)} />
+                      </ProductAmountContainer>
+                      <ProductPrice>
+                        $ {product.price}
+                      </ProductPrice>
+                      <DeleteIcon><MdDeleteOutline onClick={() => deleteProducts(product)} />
+                      </DeleteIcon>
+                    </PriceDetail>
+                  </DetailsWrapper>
+
                 </ProductDetail>
-                <PriceDetail>
-                  <ProductAmountContainer>
-                    <Add onClick={() => handleAdd(product)} />
-                    <ProductAmount>{product.quantity}</ProductAmount>
-                    <Remove onClick={() => handleMinus(product)} />
-                  </ProductAmountContainer>
-                  <ProductPrice>
-                    $ {product.price}
-                  </ProductPrice>
-                </PriceDetail>
-                <MdDeleteOutline style={{ fontSize: "2rem", marginRight: "2rem", color: "red" }} onClick={() => deleteProducts(product)} />
+
               </Product>
             ))}
             <Hr />
