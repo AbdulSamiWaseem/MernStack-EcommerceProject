@@ -1,6 +1,7 @@
 import { Send } from "@mui/icons-material";
 import styled from "styled-components";
 import { mobile,tablet } from "../responsive";
+import { useState } from "react";
 
 const Container = styled.div`
   background-color: #fcf5f5;
@@ -50,15 +51,19 @@ const Button = styled.button`
   background-color: teal;
   color: white;
 `;
-
 const Newsletter = () => {
+const [email,setEmail]=useState('');
+
   return (
     <Container>
       <Title>Newsletter</Title>
       <Desc>Get timely updates from your favorite products.</Desc>
       <InputContainer>
-        <Input placeholder="Your email" />
-        <Button>
+        <Input placeholder="Your email" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
+        <Button onClick={()=>{
+          console.log(email);
+          setEmail('')}
+          }>
           <Send />
         </Button>
       </InputContainer>
