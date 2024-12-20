@@ -7,12 +7,13 @@ import Navbar from "../components/Navbar";
 import { mobile, tablet } from "../responsive";
 import StripeCheckout from "react-stripe-checkout";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { Navigate, NavLink, useNavigate } from "react-router-dom"
 import { deleteProduct, incProduct, decProduct } from "../redux/cartRedux";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import apiRequest from "../api";
+import { toast } from "react-toastify";
 const KEY = process.env.REACT_APP_STRIPE;
 
 
@@ -166,7 +167,7 @@ const Summary = styled.div`
   border-radius: 10px;
   padding: 20px;
   height: 50vh;
-  ${mobile({ padding: "10px",width:"100%",marginTop:"10px" })}
+  ${mobile({ padding: "10px", width: "100%", marginTop: "10px" })}
 
 `;
 
@@ -207,7 +208,7 @@ right:50%;
 display:flex;
 align-items:center;
 font-weight:300;
-${tablet({ display:'none'})}
+${tablet({ display: 'none' })}
 
 
 `;
@@ -224,12 +225,19 @@ ${mobile({ fontSize: "1.25rem", marginRight: "0px", })}
 `;
 
 const Cart = () => {
+  const user=useSelector((state)=>state.user.currentUser);
+  console.log("user",user);
   const cart = useSelector((state) => state.cart);
   const [stripeToken, setStripeToken] = useState(null);
   const dispatch = useDispatch();
   const Navigation = useNavigate();
   const shippingCharges = 10;
   const shippingDiscount = 5;
+
+  const handleClick=()=>{
+    toast.error("Before Checkout You have to login first.")
+    Navigation("/login")
+  }
 
   const onToken = (token) => {
     setStripeToken(token);
@@ -350,7 +358,8 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>$ {showTotal + shippingCharges - shippingDiscount}</SummaryItemPrice>
             </SummaryItem>
-            <StripeCheckout
+            {user
+            ?<StripeCheckout
               name="Shop Online"
               image="https://avatars.githubusercontent.com/u/1486366?v=4"
               billingAddress
@@ -362,6 +371,9 @@ const Cart = () => {
             >
               <Button>CHECKOUT NOW</Button>
             </StripeCheckout>
+            :<Button onClick={handleClick}>CHECKOUT NOW</Button>
+            }
+
           </Summary>
         </Bottom>
       </Wrapper>

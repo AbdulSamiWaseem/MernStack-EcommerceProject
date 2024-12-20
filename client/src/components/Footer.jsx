@@ -101,7 +101,7 @@ const Footer = () => {
       <Left>
         <Logo>DILKASH.</Logo>
         <Desc>
-          Discover timeless style and unparalleled comfort with [Your Brand Name]. From everyday essentials to statement pieces, we bring you thoughtfully crafted designs that elevate your wardrobe. Join our community and stay inspired with the latest trends, exclusive offers, and sustainable fashion updates. Let us help you express your unique style with confidence and grace. © [Year] [Your Brand Name]. All Rights Reserved.
+          Discover timeless style and unparalleled comfort with Dilkash. From everyday essentials to statement pieces, we bring you thoughtfully crafted designs that elevate your wardrobe. Join our community and stay inspired with the latest trends, exclusive offers, and sustainable fashion updates. Let us help you express your unique style with confidence and grace. © 2020 Dilkash. All Rights Reserved.
         </Desc>
         <SocialContainer>
           <SocialIcon color="3B5999">
@@ -136,13 +136,13 @@ const Footer = () => {
       <Right>
         <Title>Contact</Title>
         <ContactItem>
-          <Room style={{ marginRight: "10px" }} /> 622 Dixie Path , South Tobinchester 98336
+          <Room style={{ marginRight: "10px" }} /> Lahore , Pakistan 54000
         </ContactItem>
         <ContactItem>
-          <Phone style={{ marginRight: "10px" }} /> +1 234 56 78
+          <Phone style={{ marginRight: "10px" }} /> +92 325 4894009
         </ContactItem>
         <ContactItem>
-          <MailOutline style={{ marginRight: "10px" }} /> contact@lama.dev
+          <MailOutline style={{ marginRight: "10px" }} /> abdulsamiwaseem26@gmail.com
         </ContactItem>
         <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
       </Right>

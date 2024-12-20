@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { mobile, tablet } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { loginFailure, loginStart, loginSuccess } from "../redux/userRedux";
 import apiRequest from "../api";
 import { toast } from "react-toastify";
@@ -79,12 +79,12 @@ const Button = styled.button`
   }
 `;
 
-const Link = styled.a`
-  margin: 5px 0px;
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-`;
+// const Link = styled.a`
+//   margin: 5px 0px;
+//   font-size: 12px;
+//   text-decoration: underline;
+//   cursor: pointer;
+// `;
 
 const Error = styled.span`
   color: red;
@@ -94,7 +94,7 @@ const Error = styled.span`
 const Login = () => {
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
-  const [fetching, setFetchind] = useState(isFetching)
+  const [fetching, setFetching] = useState(false)
   const [err, setErr] = useState(error)
   const navigate = useNavigate();
   const { values, errors, touched, handleChange, handleSubmit, handleBlur } = useFormik({
@@ -104,6 +104,7 @@ const Login = () => {
     },
     validationSchema: loginUserSchema,
     onSubmit: (values, actions) => {
+      setFetching(true)
       login(values);
       actions.resetForm()
     }
@@ -124,6 +125,7 @@ const Login = () => {
       toast.error("Login Failed")
 
     }
+    setFetching(false);
   };
   return (
     <>
@@ -160,7 +162,7 @@ const Login = () => {
             </Button>
             {err && <Error>Something went wrong...</Error>}
             {/* <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link> */}
-            <Link to='/register'>CREATE A NEW ACCOUNT</Link>
+            <Link to='/register' style={{color:"black",fontSize:"14px",textDecoration:"underline"}}>CREATE A NEW ACCOUNT</Link>
           </Form>
         </Wrapper>
       </Container>
